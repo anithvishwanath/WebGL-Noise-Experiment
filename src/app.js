@@ -1,5 +1,8 @@
 import * as THREE from 'three';
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import fragment from './shaders/fragment.glsl';
+import vertex from './shaders/vertex.glsl';
+import testTexture from './textures/water.jpg';
 
 export default class Sketch {
 	constructor(options) {
@@ -7,13 +10,15 @@ export default class Sketch {
 		this.width = this.container.offsetWidth;
 		this.height = this.container.offsetHeight;
 
-		this.camera = new THREE.PerspectiveCamera( 70, this.width / this.height, 0.01, 10 );
+		this.camera = new THREE.PerspectiveCamera(70, this.width / this.height, 0.01, 10);
 		this.camera.position.z = 1;
-		
+
 		this.scene = new THREE.Scene();
 
-		this.renderer = new THREE.WebGLRenderer( { antialias: true } );
-		// this.renderer.setPixelRatio(window.devicePixelRatio);
+		this.renderer = new THREE.WebGLRenderer({
+			antialias: true,
+			alpha: true
+		});
 		this.renderer.setPixelRatio(2);
 		this.container.appendChild(this.renderer.domElement);
 		this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -28,7 +33,7 @@ export default class Sketch {
 	resize() {
 		this.width = this.container.offsetWidth;
 		this.height = this.container.offsetHeight;
-		this.renderer.setSize( this.width, this.height );
+		this.renderer.setSize(this.width, this.height);
 		this.camera.aspect = this.width / this.height;
 		this.camera.updateProjectionMatrix();
 	}
@@ -38,19 +43,30 @@ export default class Sketch {
 	}
 
 	addObjects() {
-		this.geometry = new THREE.BoxGeometry( 0.2, 0.2, 0.2 );
-		this.material = new THREE.MeshNormalMaterial();
-		
-		this.mesh = new THREE.Mesh( this.geometry, this.material );
-		this.scene.add( this.mesh );
+		this.geometry = new THREE.PlaneGeometry(0.75, 0.75, 100, 100);
+
+		this.material = new THREE.ShaderMaterial({
+			wireframe: false,
+			uniforms: {
+				time: { value: 1.0 },
+				uTexture: { value: new THREE.TextureLoader().load(testTexture)},
+				resolution: { value: new THREE.Vector2() }
+			},
+			vertexShader: vertex,
+			fragmentShader: fragment,
+		});
+
+		this.mesh = new THREE.Mesh(this.geometry, this.material);
+		this.scene.add(this.mesh);
 	}
 
 	render() {
-		this.time += 0.5;
+		this.time += 0.05;
+		this.material.uniforms.time.value = this.time;
 		this.mesh.rotation.x = this.time / 2000;
 		this.mesh.rotation.y = this.time / 1000;
-		
-		this.renderer.render( this.scene, this.camera );
+
+		this.renderer.render(this.scene, this.camera);
 		requestAnimationFrame(this.render.bind(this));
 	}
 }
@@ -58,32 +74,3 @@ export default class Sketch {
 new Sketch({
 	domElement: document.getElementById('container')
 });
-
-// const width = window.innerWidth, height = window.innerHeight;
-
-// // init
-
-// const camera = new THREE.PerspectiveCamera( 70, width / height, 0.01, 10 );
-// camera.position.z = 1;
-
-// const scene = new THREE.Scene();
-
-// const geometry = new THREE.BoxGeometry( 0.2, 0.2, 0.2 );
-// const material = new THREE.MeshNormalMaterial();
-
-// const mesh = new THREE.Mesh( geometry, material );
-// scene.add( mesh );
-
-// const renderer = new THREE.WebGLRenderer( { antialias: true } );
-// renderer.setSize( width, height );
-// renderer.setAnimationLoop( animate );
-// let container = document.getElementById('container');
-// container.appendChild( renderer.domElement );
-
-// // animation
-
-// function animate( time ) {
-
-// 	
-
-// }
