@@ -15,5 +15,5 @@ void main() {
     // gl_FragColor = vec4( vUv, 0.0, 1.0 );
     // gl_FragColor = vec4( sinePulse, 0.0, 0.0, 1.0 );
     gl_FragColor = texImg;
-    gl_FragColor = vec4( 0.5 * (pulse + 1.0) , 0.3, 1.0, 1.0);
+    gl_FragColor = vec4( 0.5 * (pulse + 1.0) , 0.3, 1.0, 1.0 );
 }

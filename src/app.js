@@ -43,13 +43,13 @@ export default class Sketch {
 	}
 
 	addObjects() {
-		this.geometry = new THREE.SphereGeometry(0.5, 100, 100);
+		this.geometry = new THREE.SphereGeometry(0.25, 100, 100);
 
 		this.material = new THREE.ShaderMaterial({
 			wireframe: false,
 			uniforms: {
 				time: { value: 1.0 },
-				uTexture: { value: new THREE.TextureLoader().load(testTexture)},
+				uTexture: { value: new THREE.TextureLoader().load(testTexture) },
 				resolution: { value: new THREE.Vector2() }
 			},
 			vertexShader: vertex,
