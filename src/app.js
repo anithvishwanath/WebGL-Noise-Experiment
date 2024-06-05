@@ -10,8 +10,10 @@ export default class Sketch {
 		this.width = this.container.offsetWidth;
 		this.height = this.container.offsetHeight;
 
-		this.camera = new THREE.PerspectiveCamera(70, this.width / this.height, 0.01, 10);
-		this.camera.position.z = 1;
+		this.camera = new THREE.PerspectiveCamera(30, this.width / this.height, 10, 1000);
+		this.camera.position.z = 600;
+
+		this.camera.fov = 2 * (Math.atan( (this.height / 2) / 600 ) * (180 / Math.PI)); // Calculate FOV and convert to degrees.
 
 		this.scene = new THREE.Scene();
 
@@ -43,7 +45,7 @@ export default class Sketch {
 	}
 
 	addObjects() {
-		this.geometry = new THREE.SphereGeometry(0.25, 100, 100);
+		this.geometry = new THREE.PlaneGeometry(400, 200, 100, 100);
 
 		this.material = new THREE.ShaderMaterial({
 			wireframe: false,
